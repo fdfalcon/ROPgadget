@@ -1811,9 +1811,12 @@ class Core(cmd.Cmd):
         print "!keyword = witout"
 
 
+    def do_count(self, s):
+        print "[*] %d loaded gadgets." % len(self.__gadgets)
 
 
-
+    def help_count(self):
+        print "Shows the number of loaded gadgets."
 
 
 
