@@ -1601,10 +1601,12 @@ class Core(cmd.Cmd):
         if not self.__options.badbytes:
             return
         new = []
-        bbytes = self.__options.badbytes.split("|")
+        #Filter out empty badbytes (i.e if badbytes was set to 00|ff| there's an empty badbyte after the last '|')
+        #and convert each one to the corresponding byte
+        bbytes = [bb.decode('hex') for bb in self.__options.badbytes.split("|") if bb]
         archMode = self.__binary.getArchMode()
         for gadget in self.__gadgets:
-            gadAddr = ("%08x" %(gadget["vaddr"]) if archMode == CS_MODE_32 else "%016x" %(gadget["vaddr"]))
+            gadAddr = pack("<L", gadget["vaddr"]) if archMode == CS_MODE_32 else pack("<Q", gadget["vaddr"])
             try:
                 for x in bbytes:
                     if x in gadAddr: raise
